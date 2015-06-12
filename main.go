@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	"github.com/daaku/go.httpgzip"
 	"github.com/gorilla/mux"
@@ -46,6 +47,21 @@ func backup() error {
 	return gzipWriter.Close()
 }
 
+func logger(inner http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+
+		inner.ServeHTTP(w, r)
+
+		log.Printf(
+			"%s\t%s\t%s",
+			r.Method,
+			r.RequestURI,
+			time.Since(start),
+		)
+	})
+}
+
 func main() {
 	flag.Parse()
 
@@ -65,7 +81,7 @@ func main() {
 	purchasesSubRouter.HandleFunc("/{id:[0-9]+}", app.handlePurchase).Methods("GET")
 	purchasesSubRouter.HandleFunc("/", app.handleAddPurchase).Methods("POST")
 
-	http.Handle("/", httpgzip.NewHandler(r))
+	http.Handle("/", logger(httpgzip.NewHandler(r)))
 
 	log.Printf("Serving on %s\n", *listen)
 	log.Fatal(http.ListenAndServe(*listen, nil))
