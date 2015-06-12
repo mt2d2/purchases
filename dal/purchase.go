@@ -14,9 +14,16 @@ type Purchase struct {
 	TimeBought time.Time `db:"time_bought"`
 }
 
-// NewPurchase adds a new a purchase to the database.
-func NewPurchase(db *sqlx.DB) error {
-	return nil
+// AddPurchase adds a new a purchase to the database.
+func AddPurchase(db *sqlx.DB, purchase *Purchase) error {
+	_, err := db.NamedExec(
+		"INSERT INTO purchase (name, cost, time_bought) VALUES (:name, :cost, :time_bought)",
+		map[string]interface{}{
+			"name":        purchase.Name,
+			"cost":        purchase.Cost,
+			"time_bought": purchase.TimeBought,
+		})
+	return err
 }
 
 // GetPurchases lists all purchases from the database.
@@ -27,4 +34,14 @@ func GetPurchases(db *sqlx.DB) ([]Purchase, error) {
 		return nil, err
 	}
 	return purchases, nil
+}
+
+// GetPurchase retrieves a purchase by its ID.
+func GetPurchase(db *sqlx.DB, byID uint64) (*Purchase, error) {
+	purchase := Purchase{}
+	err := db.Get(&purchase, "SELECT * FROM purchase WHERE id=?", byID)
+	if err != nil {
+		return nil, err
+	}
+	return &purchase, nil
 }
