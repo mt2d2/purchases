@@ -47,12 +47,10 @@ func backup() error {
 	return gzipWriter.Close()
 }
 
-func logger(inner http.Handler) http.Handler {
+func logger(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-
-		inner.ServeHTTP(w, r)
-
+		handler.ServeHTTP(w, r)
 		log.Printf(
 			"%s\t%s\t%s",
 			r.Method,
@@ -77,9 +75,9 @@ func main() {
 
 	r := mux.NewRouter()
 	purchasesSubRouter := r.PathPrefix("/purchases").Subrouter()
-	purchasesSubRouter.HandleFunc("/", app.handlePurchases).Methods("GET")
+	purchasesSubRouter.HandleFunc("", app.handlePurchases).Methods("GET")
 	purchasesSubRouter.HandleFunc("/{id:[0-9]+}", app.handlePurchase).Methods("GET")
-	purchasesSubRouter.HandleFunc("/", app.handleAddPurchase).Methods("POST")
+	purchasesSubRouter.HandleFunc("", app.handleAddPurchase).Methods("POST")
 
 	http.Handle("/", logger(httpgzip.NewHandler(r)))
 
