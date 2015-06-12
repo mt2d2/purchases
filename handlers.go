@@ -2,12 +2,21 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/mt2d2/purchases/dal"
 )
+
+func writeJSON(w http.ResponseWriter, val interface{}) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	if err := json.NewEncoder(w).Encode(val); err != nil {
+		log.Printf("error encoding json response: %s", err)
+	}
+}
 
 func (app *app) handlePurchases(w http.ResponseWriter, req *http.Request) {
 	purchases, err := dal.GetPurchases(app.db)
@@ -15,7 +24,7 @@ func (app *app) handlePurchases(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	json.NewEncoder(w).Encode(purchases)
+	writeJSON(w, purchases)
 }
 
 func (app *app) handlePurchase(w http.ResponseWriter, req *http.Request) {
@@ -36,5 +45,26 @@ func (app *app) handlePurchase(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "no such record", http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(purchase)
+	writeJSON(w, purchase)
+}
+
+func (app *app) handleAddPurchase(w http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+	var newPurchase dal.Purchase
+	err := decoder.Decode(&newPurchase)
+	if err != nil {
+		log.Printf("could not decode json: %s", err)
+		http.Error(w, "could not decode json", http.StatusInternalServerError)
+		return
+	}
+	newPurchase.ID = 0
+	newPurchase.TimeBought = time.Now()
+
+	// TODO validate purchase
+
+	err = dal.AddPurchase(app.db, &newPurchase)
+	if err != nil {
+		http.Error(w, "could not save purchase", http.StatusInternalServerError)
+		return
+	}
 }
