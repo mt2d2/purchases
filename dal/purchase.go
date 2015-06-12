@@ -8,10 +8,10 @@ import (
 
 // Purchase is the primary dal for an item purchased.
 type Purchase struct {
-	ID         uint64
-	Name       string
-	Cost       float64
-	TimeBought time.Time `db:"time_bought"`
+	ID         uint64    `json:"id"`
+	Name       string    `json:"name"`
+	Cost       float64   `json:"cost"`
+	TimeBought time.Time `json:"time_bought" db:"time_bought"`
 }
 
 // AddPurchase adds a new a purchase to the database.

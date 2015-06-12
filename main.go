@@ -62,6 +62,7 @@ func main() {
 	r := mux.NewRouter()
 	purchasesSubRouter := r.PathPrefix("/purchases").Subrouter()
 	purchasesSubRouter.HandleFunc("/", app.handlePurchases).Methods("GET")
+	purchasesSubRouter.HandleFunc("/{id:[0-9]+}", app.handlePurchase).Methods("GET")
 
 	http.Handle("/", httpgzip.NewHandler(r))
 
