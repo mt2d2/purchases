@@ -29,7 +29,7 @@ func AddPurchase(db *sqlx.DB, purchase *Purchase) error {
 // GetPurchases lists all purchases from the database.
 func GetPurchases(db *sqlx.DB) ([]Purchase, error) {
 	purchases := []Purchase{}
-	err := db.Select(&purchases, "SELECT * FROM purchase ORDER BY time_bought ASC")
+	err := db.Select(&purchases, "SELECT * FROM purchase ORDER BY time_bought DESC")
 	if err != nil {
 		return nil, err
 	}

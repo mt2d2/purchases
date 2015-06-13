@@ -74,10 +74,9 @@ func main() {
 	log.Println("database opened")
 
 	r := mux.NewRouter()
-	purchasesSubRouter := r.PathPrefix("/purchases").Subrouter()
-	purchasesSubRouter.HandleFunc("", app.handlePurchases).Methods("GET")
-	purchasesSubRouter.HandleFunc("/{id:[0-9]+}", app.handlePurchase).Methods("GET")
-	purchasesSubRouter.HandleFunc("", app.handleAddPurchase).Methods("POST")
+	r.HandleFunc("/purchases", app.handlePurchases).Methods("GET")
+	r.HandleFunc("/purchases/{id:[0-9]+}", app.handlePurchase).Methods("GET")
+	r.HandleFunc("/purchases", app.handleAddPurchase).Methods("POST")
 
 	http.Handle("/", logger(httpgzip.NewHandler(r)))
 
