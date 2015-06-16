@@ -67,8 +67,8 @@ func TestAddPurchase(t *testing.T) {
 	if len(purchases) != 3 {
 		t.Error("expected 3 purchases now, AddPurchase failed")
 	}
-	if !reflect.DeepEqual(newPurchase, purchases[2]) {
-		t.Error("new purchase was not saved correctly")
+	if !reflect.DeepEqual(newPurchase, purchases[0]) {
+		t.Error("new purchase was not saved correctly", newPurchase, purchases[2])
 	}
 }
 
