@@ -48,6 +48,26 @@ func (app *app) handlePurchase(w http.ResponseWriter, req *http.Request) {
 	writeJSON(w, purchase)
 }
 
+func (app *app) handleDelete(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	id, ok := vars["id"]
+	if !ok {
+		http.Error(w, "id feld is missing", http.StatusInternalServerError)
+		return
+
+	}
+	byID, err := strconv.ParseUint(id, 0, 64)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err = dal.DeletePurchase(app.db, byID)
+	if err != nil {
+		http.Error(w, "no such record", http.StatusNotFound)
+		return
+	}
+}
+
 func (app *app) handleAddPurchase(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	var newPurchase dal.Purchase
