@@ -45,3 +45,13 @@ func GetPurchase(db *sqlx.DB, byID uint64) (*Purchase, error) {
 	}
 	return &purchase, nil
 }
+
+// DeletePurchase removes a purchase from the database.
+func DeletePurchase(db *sqlx.DB, byID uint64) error {
+	_, err := db.NamedExec(
+		"DELETE FROM purchase where id=(:id)",
+		map[string]interface{}{
+			"id": byID,
+		})
+	return err
+}

@@ -101,3 +101,39 @@ func TestGetPurchase(t *testing.T) {
 		t.Error("second retrieved row should match expected")
 	}
 }
+
+func TestDeletePurchase(t *testing.T) {
+	db, err := GetMockupDB()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+
+	purchases, err := GetPurchases(db)
+	if err != nil {
+		t.Error(err)
+	}
+	if len(purchases) != 2 {
+		t.Error("expected 2 purchases initially")
+	}
+
+	err = DeletePurchase(db, 1)
+	if err != nil {
+		t.Error(err)
+	}
+
+	purchases, err = GetPurchases(db)
+	if err != nil {
+		t.Error(err)
+	}
+	if len(purchases) != 1 {
+		t.Error("expected 1 purchase after delete")
+	}
+	mockup2 := Purchase{
+		uint64(2), "Test2", 30.0, time.Unix(0, 0),
+	}
+	if !reflect.DeepEqual(purchases[0], mockup2) {
+		t.Error("second retrieved row should match expected")
+	}
+
+}
