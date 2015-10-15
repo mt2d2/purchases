@@ -14,8 +14,8 @@ CREATE TABLE "purchase" (
         cost  REAL NOT NULL,
         time_bought   TIMESTAMP NOT NULL
 );
-INSERT INTO "purchase" VALUES(1,'Test1',20.0,0);
-INSERT INTO "purchase" VALUES(2,'Test2',30.0,0);
+INSERT INTO "purchase" VALUES(1,'Test1',20.0,1444885951);
+INSERT INTO "purchase" VALUES(2,'Test2',30.0,1444885950);
 COMMIT;
 `
 

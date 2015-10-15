@@ -23,14 +23,14 @@ func TestGetPurchases(t *testing.T) {
 	}
 
 	mockup1 := Purchase{
-		uint64(1), "Test1", 20.0, time.Unix(0, 0),
+		uint64(1), "Test1", 20.0, time.Unix(1444885951, 0),
 	}
 	if !reflect.DeepEqual(purchases[0], mockup1) {
-		t.Error("first retrieved row should match expected")
+		t.Error("first retrieved row should match expected", purchases[0], mockup1)
 	}
 
 	mockup2 := Purchase{
-		uint64(2), "Test2", 30.0, time.Unix(0, 0),
+		uint64(2), "Test2", 30.0, time.Unix(1444885950, 0),
 	}
 	if !reflect.DeepEqual(purchases[1], mockup2) {
 		t.Error("second retrieved row should match expected")
@@ -67,8 +67,8 @@ func TestAddPurchase(t *testing.T) {
 	if len(purchases) != 3 {
 		t.Error("expected 3 purchases now, AddPurchase failed")
 	}
-	if !reflect.DeepEqual(newPurchase, purchases[0]) {
-		t.Error("new purchase was not saved correctly", newPurchase, purchases[2])
+	if newPurchase.Name != purchases[0].Name && newPurchase.Cost != purchases[0].Cost {
+		t.Error("new purchase was not saved correctly", newPurchase, purchases[0])
 	}
 }
 
@@ -80,7 +80,7 @@ func TestGetPurchase(t *testing.T) {
 	defer db.Close()
 
 	mockup1 := Purchase{
-		uint64(1), "Test1", 20.0, time.Unix(0, 0),
+		uint64(1), "Test1", 20.0, time.Unix(1444885951, 0),
 	}
 	purchase1, err := GetPurchase(db, 1)
 	if err != nil {
@@ -91,7 +91,7 @@ func TestGetPurchase(t *testing.T) {
 	}
 
 	mockup2 := Purchase{
-		uint64(2), "Test2", 30.0, time.Unix(0, 0),
+		uint64(2), "Test2", 30.0, time.Unix(1444885950, 0),
 	}
 	purchase2, err := GetPurchase(db, 2)
 	if err != nil {
@@ -130,7 +130,7 @@ func TestDeletePurchase(t *testing.T) {
 		t.Error("expected 1 purchase after delete")
 	}
 	mockup2 := Purchase{
-		uint64(2), "Test2", 30.0, time.Unix(0, 0),
+		uint64(2), "Test2", 30.0, time.Unix(1444885950, 0),
 	}
 	if !reflect.DeepEqual(purchases[0], mockup2) {
 		t.Error("second retrieved row should match expected")
