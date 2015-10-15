@@ -1,6 +1,11 @@
 package dal
 
-import "time"
+import (
+	"database/sql"
+	"errors"
+	"strings"
+	"time"
+)
 
 import (
 	"github.com/jmoiron/sqlx"
@@ -12,6 +17,25 @@ type Purchase struct {
 	Name       string    `json:"name"`
 	Cost       float64   `json:"cost"`
 	TimeBought time.Time `json:"time_bought" db:"time_bought"`
+}
+
+//ValidatePurchase validates a purchase before database insertion
+func ValidatePurchase(db *sql.DB, purchase *Purchase) (ok bool, errs []error) {
+	errs = make([]error, 0)
+
+	if strings.TrimSpace(purchase.Name) == "" {
+		errs = append(errs, errors.New("Purchase must have a name."))
+	}
+
+	if purchase.Cost <= 0.0 {
+		errs = append(errs, errors.New("Purchase must have a valid cost."))
+	}
+
+	if !purchase.TimeBought.Before(time.Now()) {
+		errs = append(errs, errors.New("Purchase must have been made in the past."))
+	}
+
+	return len(errs) == 0, errs
 }
 
 // AddPurchase adds a new a purchase to the database.
