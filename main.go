@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"errors"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -26,12 +27,13 @@ func backup() error {
 		return errors.New("could not open database to backup")
 	}
 
-	err = os.MkdirAll(path.Join(filepath.Dir(*db), "backup"), 0755)
+	backupPath := path.Join(filepath.Dir(*db), "backup")
+	err = os.MkdirAll(backupPath, 0755)
 	if err != nil {
 		return errors.New("could not create backup")
 	}
 
-	destFile := path.Join("backup", *db+".gz")
+	destFile := path.Join(backupPath, filepath.Base(*db)+".gz")
 	dest, err := os.Create(destFile)
 	defer dest.Close()
 	if err != nil {
