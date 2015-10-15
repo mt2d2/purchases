@@ -1,6 +1,10 @@
 package dal
 
-import "github.com/jmoiron/sqlx"
+import (
+	"time"
+
+	"github.com/jmoiron/sqlx"
+)
 
 import _ "github.com/mattn/go-sqlite3" // We need this for our mockup.
 
@@ -19,8 +23,7 @@ INSERT INTO "purchase" VALUES(2,'Test2',30.0,1444885950);
 COMMIT;
 `
 
-// GetMockupDB gets a shared, cached sqlite in memory database with the mockup data for testing.
-func GetMockupDB() (*sqlx.DB, error) {
+func mockupDB() (*sqlx.DB, error) {
 	// :memory: databases aren't shared amongst connections
 	// https://groups.google.com/forum/#!topic/golang-nuts/AYZl1lNxCfA
 	db, err := sqlx.Open("sqlite3", "file:dummy.db?mode=memory&cache=shared")
@@ -32,4 +35,17 @@ func GetMockupDB() (*sqlx.DB, error) {
 	}
 
 	return db, nil
+}
+
+func mockup1() *Purchase {
+	return &Purchase{
+		uint64(1), "Test1", 20.0, time.Unix(1444885951, 0),
+	}
+}
+
+// GetMockup2 returns the second mockup in the db
+func mockup2() *Purchase {
+	return &Purchase{
+		uint64(2), "Test2", 30.0, time.Unix(1444885950, 0),
+	}
 }
