@@ -29,6 +29,36 @@ func TestGetPurchases(t *testing.T) {
 	}
 }
 
+func TestValidatePurchase(t *testing.T) {
+	test := Purchase{
+		uint64(1), "Test1", 20.0, time.Unix(1444885951, 0),
+	}
+
+	ok, errs := ValidatePurchase(&test)
+	if !ok || len(errs) != 0 {
+		t.Error("expected a valid test")
+	}
+
+	test.Cost = 0
+	ok, errs = ValidatePurchase(&test)
+	if ok || len(errs) != 1 {
+		t.Error("expected a 1 error")
+	}
+
+	test.Name = ""
+	ok, errs = ValidatePurchase(&test)
+	if ok || len(errs) != 2 {
+		t.Error("expected a 2 errors")
+	}
+
+	oneHour, _ := time.ParseDuration("1h")
+	test.TimeBought = time.Now().Add(oneHour)
+	ok, errs = ValidatePurchase(&test)
+	if ok || len(errs) != 3 {
+		t.Error("expected a 3 errors")
+	}
+}
+
 func TestAddPurchase(t *testing.T) {
 	db, err := mockupDB()
 	if err != nil {

@@ -1,7 +1,6 @@
 package dal
 
 import (
-	"database/sql"
 	"errors"
 	"strings"
 	"time"
@@ -19,8 +18,8 @@ type Purchase struct {
 	TimeBought time.Time `json:"time_bought" db:"time_bought"`
 }
 
-//ValidatePurchase validates a purchase before database insertion
-func ValidatePurchase(db *sql.DB, purchase *Purchase) (ok bool, errs []error) {
+// ValidatePurchase validates a purchase before database insertion
+func ValidatePurchase(purchase *Purchase) (ok bool, errs []error) {
 	errs = make([]error, 0)
 
 	if strings.TrimSpace(purchase.Name) == "" {
