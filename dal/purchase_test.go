@@ -59,7 +59,9 @@ func TestAddPurchase(t *testing.T) {
 	if len(purchases) != 3 {
 		t.Error("expected 3 purchases now, AddPurchase failed")
 	}
-	if newPurchase.Name != purchases[0].Name && newPurchase.Cost != purchases[0].Cost {
+	if newPurchase.Name != purchases[0].Name &&
+		newPurchase.Cost != purchases[0].Cost &&
+		!newPurchase.TimeBought.Before(time.Now()) {
 		t.Error("new purchase was not saved correctly", newPurchase, purchases[0])
 	}
 }
