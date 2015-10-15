@@ -4,7 +4,6 @@ import (
 	"compress/gzip"
 	"errors"
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
