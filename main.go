@@ -9,29 +9,29 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"time"
 
 	"github.com/daaku/go.httpgzip"
 	"github.com/gorilla/mux"
 )
 
-const databaseFile = "purchases.db"
-
 var listen = flag.String("listen", "localhost:8080", "host and port to listen on")
+var db = flag.String("db", "purchases.db", "sqlite3 database file")
 
 func backup() error {
-	src, err := os.Open(databaseFile)
+	src, err := os.Open(*db)
 	defer src.Close()
 	if err != nil {
 		return errors.New("could not open database to backup")
 	}
 
-	err = os.MkdirAll("backup", 0755)
+	err = os.MkdirAll(path.Join(filepath.Dir(*db), "backup"), 0755)
 	if err != nil {
 		return errors.New("could not create backup")
 	}
 
-	destFile := path.Join("backup", databaseFile+".gz")
+	destFile := path.Join("backup", *db+".gz")
 	dest, err := os.Create(destFile)
 	defer dest.Close()
 	if err != nil {
@@ -83,5 +83,4 @@ func main() {
 
 	log.Printf("Serving on %s\n", *listen)
 	log.Fatal(http.ListenAndServe(*listen, nil))
-	// log.Fatal(http.ListenAndServeTLS(*listen, "cert.pem", "key.pem", nil))
 }

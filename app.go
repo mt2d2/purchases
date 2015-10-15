@@ -12,7 +12,7 @@ type app struct {
 }
 
 func newApp() *app {
-	db, err := sqlx.Open("sqlite3", databaseFile)
+	db, err := sqlx.Open("sqlite3", *db)
 	if err != nil {
 		log.Panicln(err)
 	}
