@@ -29,6 +29,41 @@ func TestGetPurchases(t *testing.T) {
 	}
 }
 
+func TestGetPurchasesAfterDate(t *testing.T) {
+	db, err := mockupDB()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+
+	beginningOfTime := time.Unix(mockup1().TimeBought.Unix()-(60*60*24*1), 0)
+	purchases, err := GetPurchasesAfterDate(db, beginningOfTime)
+	if err != nil {
+		t.Error(err)
+	}
+	if len(purchases) != 2 {
+		t.Error("expected 2 purchases ")
+	}
+
+	justBefore := time.Unix(mockup1().TimeBought.Unix()-1, 0)
+	purchases, err = GetPurchasesAfterDate(db, justBefore)
+	if err != nil {
+		t.Error(err)
+	}
+	if len(purchases) != 1 {
+		t.Error("expected 1 purchases ")
+	}
+
+	now := time.Now()
+	purchases, err = GetPurchasesAfterDate(db, now)
+	if err != nil {
+		t.Error(err)
+	}
+	if len(purchases) != 0 {
+		t.Error("expected 0 purchases")
+	}
+}
+
 func TestValidatePurchase(t *testing.T) {
 	test := mockup1()
 

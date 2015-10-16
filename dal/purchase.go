@@ -59,6 +59,18 @@ func GetPurchases(db *sqlx.DB) ([]Purchase, error) {
 	return purchases, nil
 }
 
+// GetPurchasesAfterDate lists all purchases from the database made after date.
+func GetPurchasesAfterDate(db *sqlx.DB, date time.Time) ([]Purchase, error) {
+	purchases := []Purchase{}
+	err := db.Select(&purchases,
+		"SELECT * FROM purchase WHERE time_bought > ? ORDER BY time_bought DESC",
+		date.Unix())
+	if err != nil {
+		return nil, err
+	}
+	return purchases, nil
+}
+
 // GetPurchase retrieves a purchase by its ID.
 func GetPurchase(db *sqlx.DB, byID uint64) (*Purchase, error) {
 	purchase := Purchase{}
