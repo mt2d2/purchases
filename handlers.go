@@ -19,7 +19,7 @@ func writeJSON(w http.ResponseWriter, val interface{}) {
 }
 
 func (app *app) handlePurchases(w http.ResponseWriter, req *http.Request) {
-	purchases, err := dal.GetPurchases(app.db)
+	purchases, err := dal.GetPurchasesAfterLastMarker(app.db)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
