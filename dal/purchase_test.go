@@ -37,7 +37,7 @@ func TestGetPurchasesAfterDate(t *testing.T) {
 	defer db.Close()
 
 	beginningOfTime := time.Unix(mockup1().TimeBought.Unix()-(60*60*24*1), 0)
-	purchases, err := GetPurchasesAfterDate(db, beginningOfTime)
+	purchases, err := getPurchasesAfterDate(db, beginningOfTime)
 	if err != nil {
 		t.Error(err)
 	}
@@ -46,7 +46,7 @@ func TestGetPurchasesAfterDate(t *testing.T) {
 	}
 
 	justBefore := time.Unix(mockup1().TimeBought.Unix()-1, 0)
-	purchases, err = GetPurchasesAfterDate(db, justBefore)
+	purchases, err = getPurchasesAfterDate(db, justBefore)
 	if err != nil {
 		t.Error(err)
 	}
@@ -55,7 +55,7 @@ func TestGetPurchasesAfterDate(t *testing.T) {
 	}
 
 	now := time.Now()
-	purchases, err = GetPurchasesAfterDate(db, now)
+	purchases, err = getPurchasesAfterDate(db, now)
 	if err != nil {
 		t.Error(err)
 	}
