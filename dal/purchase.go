@@ -70,9 +70,9 @@ func getPurchasesAfterDate(db *sqlx.DB, date time.Time) ([]Purchase, error) {
 	return purchases, nil
 }
 
-// GetPurchasesAfterMarker lists all purchases from the database made after the
-// last marker date, the marker date one month before the current marker date.
-func GetPurchasesAfterMarker(db *sqlx.DB) ([]Purchase, error) {
+// GetPurchasesAfterLastMarker lists all purchases from the database made after
+// the last marker date, the one one month before the current marker date.
+func GetPurchasesAfterLastMarker(db *sqlx.DB) ([]Purchase, error) {
 	marker := currentMarkerDay()
 	purchases, err := getPurchasesAfterDate(db, marker)
 	if err != nil {
