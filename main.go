@@ -16,23 +16,25 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var listen = flag.String("listen", "localhost:8080", "host and port to listen on")
-var db = flag.String("db", "purchases.db", "sqlite3 database file")
+var fListen = flag.String("listen", "localhost:8080", "host and port to listen on")
+var fDB = flag.String("db", "purchases.db", "sqlite3 database file")
+var fUsername = flag.String("username", "test", "username for basic auth")
+var fPassword = flag.String("password", "password", "password for basic auth")
 
 func backup() error {
-	src, err := os.Open(*db)
+	src, err := os.Open(*fDB)
 	defer src.Close()
 	if err != nil {
 		return errors.New("could not open database to backup")
 	}
 
-	backupPath := path.Join(filepath.Dir(*db), "backup")
+	backupPath := path.Join(filepath.Dir(*fDB), "backup")
 	err = os.MkdirAll(backupPath, 0755)
 	if err != nil {
 		return errors.New("could not create backup")
 	}
 
-	destFile := path.Join(backupPath, filepath.Base(*db)+".gz")
+	destFile := path.Join(backupPath, filepath.Base(*fDB)+".gz")
 	dest, err := os.Create(destFile)
 	defer dest.Close()
 	if err != nil {
@@ -46,6 +48,22 @@ func backup() error {
 	}
 
 	return gzipWriter.Close()
+}
+
+func basicAuth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		username, password, ok := r.BasicAuth()
+		if !ok {
+			http.Error(w, "Basic auth failed.", http.StatusInternalServerError)
+		}
+
+		if !(username == *fUsername &&
+			password == *fPassword) {
+			http.Error(w, "Basic auth incorrect.", http.StatusUnauthorized)
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func logger(handler http.Handler) http.Handler {
@@ -80,8 +98,8 @@ func main() {
 	r.HandleFunc("/purchases/{id:[0-9]+}", app.handleDelete).Methods("DELETE")
 	r.HandleFunc("/purchases", app.handleAddPurchase).Methods("POST")
 
-	http.Handle("/", logger(httpgzip.NewHandler(r)))
+	http.Handle("/", logger(basicAuth(httpgzip.NewHandler(r))))
 
-	log.Printf("Serving on %s\n", *listen)
-	log.Fatal(http.ListenAndServe(*listen, nil))
+	log.Printf("Serving on %s\n", *fListen)
+	log.Fatal(http.ListenAndServe(*fListen, nil))
 }
