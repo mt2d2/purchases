@@ -19,7 +19,7 @@ import (
 var fListen = flag.String("listen", "localhost:8080", "host and port to listen on")
 var fDB = flag.String("db", "purchases.db", "sqlite3 database file")
 var fUsername = flag.String("username", "test", "username for basic auth")
-var fPassword = flag.String("password", "password", "password for basic auth")
+var fPassword = flag.String("password", "test", "password for basic auth")
 
 func backup() error {
 	src, err := os.Open(*fDB)
