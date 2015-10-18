@@ -55,11 +55,13 @@ func basicAuth(next http.Handler) http.Handler {
 		username, password, ok := r.BasicAuth()
 		if !ok {
 			http.Error(w, "Basic auth failed.", http.StatusInternalServerError)
+			return
 		}
 
 		if !(username == *fUsername &&
 			password == *fPassword) {
 			http.Error(w, "Basic auth incorrect.", http.StatusUnauthorized)
+			return
 		}
 
 		next.ServeHTTP(w, r)
