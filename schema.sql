@@ -4,3 +4,5 @@ CREATE TABLE "purchase" (
         cost  REAL NOT NULL,
         time_bought   TIMESTAMP NOT NULL
 );
+
+CREATE INDEX time_bough_index ON purchase (time_bought);
