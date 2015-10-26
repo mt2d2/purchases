@@ -6,7 +6,8 @@ import (
 )
 
 func equal(a, b Purchase) bool {
-	return a.Cost == b.Cost &&
+	return a.ID == b.ID &&
+		a.Cost == b.Cost &&
 		a.Name == b.Name &&
 		a.TimeBought.Equal(b.TimeBought)
 }
