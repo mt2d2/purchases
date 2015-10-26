@@ -19,7 +19,7 @@ CREATE TABLE "purchase" (
         time_bought   TIMESTAMP NOT NULL
 );
 INSERT INTO "purchase" VALUES(1,'Test1',20.0,'2015-10-14 22:12:33Z');
-INSERT INTO "purchase" VALUES(2,'Test2',30.0,'2015-10-14 22:12:28');
+INSERT INTO "purchase" VALUES(2,'Test2',30.0,'2015-10-14 22:12:28Z');
 COMMIT;
 `
 
