@@ -1,10 +1,15 @@
 package dal
 
 import (
-	"reflect"
 	"testing"
 	"time"
 )
+
+func equal(a, b Purchase) bool {
+	return a.Cost == b.Cost &&
+		a.Name == b.Name &&
+		a.TimeBought.Equal(b.TimeBought)
+}
 
 func TestGetPurchases(t *testing.T) {
 	db, err := mockupDB()
@@ -21,10 +26,10 @@ func TestGetPurchases(t *testing.T) {
 	if len(purchases) != 2 {
 		t.Error("expected 2 purchases")
 	}
-	if !reflect.DeepEqual(purchases[0], *mockup1()) {
+	if !equal(purchases[0], *mockup1()) {
 		t.Error("first retrieved row should match expected", purchases[0], *mockup1())
 	}
-	if !reflect.DeepEqual(purchases[1], *mockup2()) {
+	if !equal(purchases[1], *mockup2()) {
 		t.Error("second retrieved row should match expected")
 	}
 }
@@ -140,7 +145,7 @@ func TestGetPurchase(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if !reflect.DeepEqual(*purchase1, *mockup1()) {
+	if !equal(*purchase1, *mockup1()) {
 		t.Error("first retrieved row should match expected")
 	}
 
@@ -148,7 +153,7 @@ func TestGetPurchase(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if !reflect.DeepEqual(*purchase2, *mockup2()) {
+	if !equal(*purchase2, *mockup2()) {
 		t.Error("second retrieved row should match expected")
 	}
 }
@@ -180,7 +185,7 @@ func TestDeletePurchase(t *testing.T) {
 	if len(purchases) != 1 {
 		t.Error("expected 1 purchase after delete")
 	}
-	if !reflect.DeepEqual(purchases[0], *mockup2()) {
+	if !equal(purchases[0], *mockup2()) {
 		t.Error("second retrieved row should match expected")
 	}
 
