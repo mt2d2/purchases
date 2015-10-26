@@ -62,7 +62,7 @@ func GetPurchases(db *sqlx.DB) ([]Purchase, error) {
 func getPurchasesAfterDate(db *sqlx.DB, date time.Time) ([]Purchase, error) {
 	purchases := []Purchase{}
 	err := db.Select(&purchases,
-		"SELECT * FROM purchase WHERE time_bought > ? ORDER BY time_bought DESC",
+		"SELECT * FROM purchase WHERE strftime('%s', time_bought) > '?' ORDER BY time_bought DESC",
 		date.Unix())
 	if err != nil {
 		return nil, err
