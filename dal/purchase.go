@@ -2,7 +2,6 @@ package dal
 
 import (
 	"errors"
-	"log"
 	"strings"
 	"time"
 )
@@ -67,8 +66,6 @@ func getPurchasesAfterDate(db *sqlx.DB, date time.Time) ([]Purchase, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("purchases %d", len(purchases))
 	return purchases, nil
 }
 

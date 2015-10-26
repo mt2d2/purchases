@@ -45,13 +45,13 @@ func TestGetPurchasesAfterDate(t *testing.T) {
 		t.Error("expected 2 purchases ")
 	}
 
-	justBefore := time.Unix(mockup1().TimeBought.Unix()-1, 0)
+	justBefore := mockup1().TimeBought
 	purchases, err = getPurchasesAfterDate(db, justBefore)
 	if err != nil {
 		t.Error(err)
 	}
 	if len(purchases) != 1 {
-		t.Error("expected 1 purchases ")
+		t.Error("expected 1 purchases", purchases)
 	}
 
 	now := time.Now()

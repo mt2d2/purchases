@@ -18,8 +18,8 @@ CREATE TABLE "purchase" (
         cost  REAL NOT NULL,
         time_bought   TIMESTAMP NOT NULL
 );
-INSERT INTO "purchase" VALUES(1,'Test1',20.0,1444885951);
-INSERT INTO "purchase" VALUES(2,'Test2',30.0,1444885950);
+INSERT INTO "purchase" VALUES(1,'Test1',20.0,'2015-10-14 22:12:33Z');
+INSERT INTO "purchase" VALUES(2,'Test2',30.0,'2015-10-14 22:12:28');
 COMMIT;
 `
 
@@ -39,13 +39,13 @@ func mockupDB() (*sqlx.DB, error) {
 
 func mockup1() *Purchase {
 	return &Purchase{
-		uint64(1), "Test1", 20.0, time.Unix(1444885951, 0),
+		uint64(1), "Test1", 20.0, time.Date(2015, 10, 14, 22, 12, 33, 0, time.UTC),
 	}
 }
 
 // GetMockup2 returns the second mockup in the db
 func mockup2() *Purchase {
 	return &Purchase{
-		uint64(2), "Test2", 30.0, time.Unix(1444885950, 0),
+		uint64(2), "Test2", 30.0, time.Date(2015, 10, 14, 22, 12, 28, 0, time.UTC),
 	}
 }
