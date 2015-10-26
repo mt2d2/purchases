@@ -5,10 +5,17 @@ import "time"
 const marker = 24
 
 func currentMarkerDay() time.Time {
-	rightNow := time.Now()
-	thisMonth := rightNow.Month()
-	thisYear := rightNow.Year()
+	return currentMarkerFromDay(time.Now())
+}
 
-	marker := time.Date(thisYear, thisMonth, marker, 0, 0, 0, 0, time.Local)
-	return marker.AddDate(0, -1, 0)
+func currentMarkerFromDay(base time.Time) time.Time {
+	thisMonth := base.Month()
+	thisYear := base.Year()
+
+	markerProto := time.Date(thisYear, thisMonth, marker, 0, 0, 0, 0, time.Local)
+	if base.Day() <= marker {
+		return markerProto.AddDate(0, -1, 0)
+	}
+
+	return markerProto
 }
