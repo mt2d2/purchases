@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func equal(a, b Purchase) bool {
+func equal(a, b *Purchase) bool {
 	return a.ID == b.ID &&
 		a.Cost == b.Cost &&
 		a.Name == b.Name &&
@@ -27,10 +27,10 @@ func TestGetPurchases(t *testing.T) {
 	if len(purchases) != 2 {
 		t.Error("expected 2 purchases")
 	}
-	if !equal(purchases[0], *mockup1()) {
+	if !equal(&purchases[0], mockup1()) {
 		t.Error("first retrieved row should match expected", purchases[0], *mockup1())
 	}
-	if !equal(purchases[1], *mockup2()) {
+	if !equal(&purchases[1], mockup2()) {
 		t.Error("second retrieved row should match expected")
 	}
 }
@@ -146,7 +146,7 @@ func TestGetPurchase(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if !equal(*purchase1, *mockup1()) {
+	if !equal(purchase1, mockup1()) {
 		t.Error("first retrieved row should match expected")
 	}
 
@@ -154,7 +154,7 @@ func TestGetPurchase(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if !equal(*purchase2, *mockup2()) {
+	if !equal(purchase2, mockup2()) {
 		t.Error("second retrieved row should match expected")
 	}
 }
@@ -186,7 +186,7 @@ func TestDeletePurchase(t *testing.T) {
 	if len(purchases) != 1 {
 		t.Error("expected 1 purchase after delete")
 	}
-	if !equal(purchases[0], *mockup2()) {
+	if !equal(&purchases[0], mockup2()) {
 		t.Error("second retrieved row should match expected")
 	}
 
