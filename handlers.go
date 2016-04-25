@@ -83,6 +83,7 @@ func (app *app) handleAddPurchase(w http.ResponseWriter, req *http.Request) {
 	ok, errs := dal.ValidatePurchase(&newPurchase)
 	if !ok || len(errs) != 0 {
 		http.Error(w, "could not validate purchase", http.StatusInternalServerError)
+		return
 	}
 
 	err = dal.AddPurchase(app.db, &newPurchase)
